@@ -125,6 +125,7 @@ class OkexGateway(BaseGateway):
         "API Key": "",
         "Secret Key": "",
         "Passphrase": "",
+        "会话数": 3,
         "代理地址": "",
         "代理端口": "",
         "服务器": ["REAL", "TEST"]
@@ -150,6 +151,7 @@ class OkexGateway(BaseGateway):
         proxy_host: str = setting["代理地址"]
         proxy_port: str = setting["代理端口"]
         server: str = setting["服务器"]
+        session_number: str = setting["会话数"]
 
         if proxy_port.isdigit():
             proxy_port = int(proxy_port)
@@ -160,6 +162,7 @@ class OkexGateway(BaseGateway):
             key,
             secret,
             passphrase,
+            session_number,
             proxy_host,
             proxy_port,
             server
@@ -266,6 +269,7 @@ class OkexRestApi(RestClient):
         key: str,
         secret: str,
         passphrase: str,
+        session_number: int,
         proxy_host: str,
         proxy_port: int,
         server: str
@@ -281,7 +285,7 @@ class OkexRestApi(RestClient):
         self.connect_time = int(datetime.now().strftime("%y%m%d%H%M%S"))
 
         self.init(REST_HOST, proxy_host, proxy_port)
-        self.start()
+        self.start(session_number)
         self.gateway.write_log("REST API启动成功")
 
         self.query_time()
